@@ -99,8 +99,9 @@ function render_page($key) {
 
 function render_pages($arr) {
 	foreach ($arr as $page) {
+		echo '<div class="container">';
 		render_page($page);
-		echo "<hr>";
+		echo '</div>';
 	}
 }
 

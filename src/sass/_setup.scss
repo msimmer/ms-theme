@@ -1,14 +1,14 @@
-/*
-  HTML5 ? Boilerplate
-
-  style.css contains a reset, font normalization and some base styles.
-
-  credit is left where credit is due.
-  much inspiration was taken from these projects:
-    yui.yahooapis.com/2.8.1/build/base/base.css
-    camendesign.com/design/
-    praegnanz.de/weblog/htmlcssjs-kickstart
-*/
+//
+//  HTML5 ? Boilerplate
+//
+//  style.css contains a reset, font normalization and some base styles.
+//
+//  credit is left where credit is due.
+//  much inspiration was taken from these projects:
+//    yui.yahooapis.com/2.8.1/build/base/base.css
+//    camendesign.com/design/
+//    praegnanz.de/weblog/htmlcssjs-kickstart
+//
 
 /*
   html5doctor.com Reset Stylesheet (Eric Meyer's Reset Reloaded + HTML5 baseline)
@@ -57,7 +57,7 @@ hr { display:block; height:1px; border:0; border-top:1px solid #ccc; margin:1em 
 
 input, select { vertical-align:middle; }
 
-/* END RESET CSS */
+// END RESET CSS
 
 
 /* fonts.css from the YUI Library: developer.yahoo.com/yui/
@@ -68,7 +68,7 @@ input, select { vertical-align:middle; }
    * we normalize monospace styles ourselves
    * table font-size is reset in the HTML5 reset above so there is no need to repeat
 */
-body { font:13px/1.231 sans-serif; *font-size:small; } /* hack retained to preserve specificity */
+body { font:13px/1.231 sans-serif; *font-size:small; } // hack retained to preserve specificity
 
 select, input, textarea, button { font:99% sans-serif; }
 
@@ -84,21 +84,21 @@ pre, code, kbd, samp { font-family: monospace, sans-serif; }
 
 
 body, select, input, textarea {
-  /* #444 looks better than black: twitter.com/H_FJ/statuses/11800719859 */
-  color: #444;
-  /* set your base font here, to apply evenly */
-  /* font-family: Georgia, serif;  */
+  // #444 looks better than black: twitter.com/H_FJ/statuses/11800719859
+  // color: #444;
+  // set your base font here, to apply evenly
+  // font-family: Georgia, serif;
 }
 
 /* headers (h1,h2,etc) have no default font-size or margin,
    you'll want to define those yourself. */
 h1,h2,h3,h4,h5,h6 { font-weight: bold; }
 
-/* always force a scrollbar in non-IE: */
+// always force a scrollbar in non-IE:
 html { overflow-y: scroll; }
 
 
-/* accessible focus treatment: people.opera.com/patrickl/experiments/keyboard/test */
+// accessible focus treatment: people.opera.com/patrickl/experiments/keyboard/test
 a:hover, a:active { outline: none; }
 
 a, a:active, a:visited { color: #607890; }
@@ -108,7 +108,7 @@ a:hover { color: #036; }
 ul, ol { margin-left: 2em; }
 ol { list-style-type: decimal; }
 
-/* remove margins for navigation lists */
+// remove margins for navigation lists
 nav ul, nav li { margin: 0; list-style:none; list-style-image: none; }
 
 small { font-size: 85%; }
@@ -116,34 +116,34 @@ strong, th { font-weight: bold; }
 
 td { vertical-align: top; }
 
-/* set sub, sup without affecting line-height: gist.github.com/413930*/
+// set sub, sup without affecting line-height: gist.github.com/413930
 sub, sup { font-size: 75%; line-height: 0; position: relative; }
 sup { top: -0.5em; }
 sub { bottom: -0.25em; }
 
 pre {
-  /* www.pathf.com/blogs/2008/05/formatting-quoted-code-in-blog-posts-css21-white-space-pre-wrap/ */
+  // www.pathf.com/blogs/2008/05/formatting-quoted-code-in-blog-posts-css21-white-space-pre-wrap/
   white-space: pre; white-space: pre-wrap; white-space: pre-line; word-wrap: break-word;
   padding: 15px;
 }
 
-textarea { overflow: auto; } /* www.sitepoint.com/blogs/2010/08/20/ie-remove-textarea-scrollbars/ */
+textarea { overflow: auto; } // www.sitepoint.com/blogs/2010/08/20/ie-remove-textarea-scrollbars/
 
-.ie6 legend, .ie7 legend { margin-left: -7px; } /* thnx ivannikolic! */
+.ie6 legend, .ie7 legend { margin-left: -7px; } // thnx ivannikolic!
 
-/* align checkboxes, radios, text inputs with their label by: Thierry Koblentz tjkdesign.com/ez-css/css/base.css  */
+// align checkboxes, radios, text inputs with their label by: Thierry Koblentz tjkdesign.com/ez-css/css/base.css
 input[type="radio"] { vertical-align: text-bottom; }
 input[type="checkbox"] { vertical-align: bottom; }
 .ie7 input[type="checkbox"] { vertical-align: baseline; }
 .ie6 input { vertical-align: text-bottom; }
 
-/* hand cursor on clickable input elements */
+// hand cursor on clickable input elements
 label, input[type="button"], input[type="submit"], input[type="image"], button { cursor: pointer; }
 
-/* webkit browsers add a 2px margin outside the chrome of form elements */
+// webkit browsers add a 2px margin outside the chrome of form elements
 button, input, select, textarea { margin: 0; }
 
-/* colors for form validity */
+// colors for form validity
 input:valid, textarea:valid   {  }
 input:invalid, textarea:invalid {
       border-radius: 1px;
@@ -161,7 +161,7 @@ input:invalid, textarea:invalid {
 ::-moz-selection{ background: #333; color:#fff; text-shadow: none; }
 ::selection { background:#333; color:#fff; text-shadow: none; }
 
-/*  j.mp/webkit-tap-highlight-color */
+//  j.mp/webkit-tap-highlight-color
 a:link { -webkit-tap-highlight-color: #FF5E99; }
 
 /* make buttons play nice in IE:
@@ -182,7 +182,7 @@ button {  width: auto; overflow: visible; }
   * Non-semantic helper classes: please define your styles before this section.
   */
 
- /* for image replacement */
+ // for image replacement
  .ir { display: block; text-indent: -999em; overflow: hidden; background-repeat: no-repeat; text-align: left; direction: ltr; }
 
  /* Hide for both screenreaders and browsers
@@ -202,11 +202,14 @@ button {  width: auto; overflow: visible; }
      width: 1px;
  }
 
- /* Hide visually and from screenreaders, but maintain layout */
+ // Hide visually and from screenreaders, but maintain layout
  .invisible { visibility: hidden; }
 
- /* >> The Magnificent CLEARFIX: Updated to prevent margin-collapsing on child elements << j.mp/bestclearfix */
+ // >> The Magnificent CLEARFIX: Updated to prevent margin-collapsing on child elements << j.mp/bestclearfix
  .clearfix:before, .clearfix:after { content: "\0020"; display: block; height: 0; visibility: hidden; }
  .clearfix:after { clear: both; }
- /* fix clearfix: blueprintcss.lighthouseapp.com/projects/15318/tickets/5-extra-margin-padding-bottom-of-page */
+ // fix clearfix: blueprintcss.lighthouseapp.com/projects/15318/tickets/5-extra-margin-padding-bottom-of-page
  .clearfix { zoom: 1; }
+
+
+* { box-sizing: border-box; }

@@ -1,0 +1,11 @@
+
+$fontsize: 1.4rem;
+
+img { max-width: 100%; }
+h1,h2,h3,h4,h5,h6,p,td,li { font-size: $fontsize; }
+h1,h2,h3,h4,h5,h6,p,table { margin: 0 0 $fontsize; }
+ul,ol { margin-bottom: $fontsize; }
+li > ul, li > ol { margin-bottom: 0; }
+blockquote { font-size: $fontsize; margin: $fontsize 0 $fontsize $fontsize; }
+a, a:link, a:active, a:focus { color: blue; }
+a:visited { color: indigo; }

@@ -10,9 +10,6 @@ include('header.inc.php'); ?>
 
     <?php
 
-      echo "<pre>";
-
-
       $files = get_tagged_content();
       $files_foo = filter_by_tags($files, 'foo');
       $pages = get_pages();
