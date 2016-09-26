@@ -8,8 +8,8 @@ if (!defined('MS_FILE_MANAGER_URI'))
 	define('MS_FILE_MANAGER_URI', get_site_url(false) . 'plugins/file_manager/');
 
 function all_pages() {
-	 global $pagesArray;
-	 return $pagesArray;
+	global $pagesArray;
+	return $pagesArray;
 }
 
 function filter_by_tags($arr, $tags, $all = false) {
@@ -107,7 +107,7 @@ function render_pages($arr) {
 function order($arr, $cmp = 'desc') {
 	function desc($a, $b) {
 		if ($a->publish_date == $b->publish_date) return 0;
-		return ($a->publish_date > $b->publish_date) ? -1 : 1;
+		return ($a->publish_date < $b->publish_date) ? -1 : 1;
 	}
 	function asc($a, $b) {
 		if ($a->publish_date == $b->publish_date) return 0;
@@ -123,7 +123,7 @@ function merge_content($arr1, $arr2) {
 }
 
 function get_tagged_content() {
-	$json = file_get_contents(GSPLUGINPATH .'/file_manager/uploads/metadata.txt');
+	$json = file_get_contents(GSPLUGINPATH .'/file_manager/uploads/metadata.json');
 	$data = json_decode($json);
 
 	// remove items without publish_date
