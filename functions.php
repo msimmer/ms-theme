@@ -5,7 +5,6 @@
 	Todo:
 	 - support pagination (infinite scroll)
 	 - merge fragments with pages for pagination
-	 - add secondary filter functionality
 	 - make things less case-sensitive
 
 	Feature ideas:
@@ -61,6 +60,14 @@ function filter_by_tags($arr, $tags, $match_all = false) {
 	return $res;
 }
 
+function get_page_data($slug = false) {
+	$data = NULL;
+	$slug = $slug == false ? get_slug() : $slug;
+	$file = 'data/pages/'. $slug .'.xml';
+	if (file_exists($file)) $data = getXML($file);
+	return $data;
+}
+
 function get_page($slug){
 	$file = 'data/pages/'. $slug .'.xml';
 	$content = '';
@@ -87,7 +94,10 @@ function get_pages($args = array()) {
 	foreach ($args['pages'] as $key => $value) {
 
 		// omit collections pages
-		if ($value['template'] == 'category.php' || $value['template'] == 'homepage.php') continue;
+		if (
+			$value['template'] == 'category.php' ||
+			$value['template'] == 'homepage.php'
+		) continue;
 
 		$pages[$count] = (object) $value;
 
@@ -98,7 +108,7 @@ function get_pages($args = array()) {
 		$pages[$count]->publish_date = strtotime($value['pubDate']);
 		$pages[$count]->content = get_page($key);
 		$pages[$count]->tags = explode(',', $value['meta']);
-		$pages[$count]->url = $value['url'] == 'index' ? '/' : get_site_url(false) . 'index.php?id=' . $value['url'];
+		$pages[$count]->url = $value['url'] == 'index' ? '/' : link_to($value['url']);
 		$count += 1;
 
 		if ($count == $args['limit']) break;
@@ -113,36 +123,37 @@ function render_page($key, $print = false) {
 		$key->data_type == 'page'
 	) {
 		$html = '';
-		$html .= '<article>';
-		$html .= '<div class="container">';
-		$html .= '<div class="row">';
-		$html .= '<div class="twelve columns">';
-		$html .= $key->content;
-		$html .= '</div></div></div></article>';
-		echo $html;
+		$html .= wrap(apply_filter($key->content, 'excerpt_shortcodes', false));
+
+
 	} else { // is a file, figure out what kind and render it
+
 		$html = '';
 		switch ($key->mime_type) {
 			case 'image/jpeg':
 			case 'image/png':
 			case 'image/gif':
-				$html .= '<img alt="'. $key->name .'" src="' . MS_FILE_MANAGER_URI . $key->file_path .'">';
+				$inner = wrap('<img alt="'. $key->name .'" src="' . MS_FILE_MANAGER_URI . $key->file_path .'">');
+				$html .= $inner;
 				break;
 
 			case 'video/webm':
-	      $html = '';
-	      $html .= '<video controls preload="auto">';
-	      $html .= '<source src="'. MS_FILE_MANAGER_URI . $key->file_path .'" type="video/webm">';
-	      $html .= '<source src="'. MS_FILE_MANAGER_URI . preg_replace('~\.webm$~', '.mp4', $key->file_path) .'" type="video/mp4">';
-	      $html .= 'Your browser doesn\'t support HTML5 video tag.';
-	      $html .= '</video>';
+				$inner = '';
+	      $inner .= '<video controls preload="auto">';
+	      $inner .= '<source src="'. MS_FILE_MANAGER_URI . $key->file_path .'" type="video/webm">';
+	      $inner .= '<source src="'. MS_FILE_MANAGER_URI . preg_replace('~\.webm$~', '.mp4', $key->file_path) .'" type="video/mp4">';
+	      $inner .= 'Your browser doesn\'t support inner5 video tag.';
+	      $inner .= '</video>';
+	      $html .= wrap($inner);
 	     	break;
 
-			case 'audio/ogg':;
-				$html .= '<audio controls preload="auto">';
-				$html .= '<source src="' . MS_FILE_MANAGER_URI . $key->file_path . '">';
-				$html .= '<source src="' . MS_FILE_MANAGER_URI . preg_replace('~\.ogg$~', '.mp3', $key->file_path) . '">';
-				$html .= '</audio>';
+			case 'audio/ogg':
+				$inner = '';
+				$inner .= '<audio controls preload="auto">';
+				$inner .= '<source src="' . MS_FILE_MANAGER_URI . $key->file_path . '">';
+				$inner .= '<source src="' . MS_FILE_MANAGER_URI . preg_replace('~\.ogg$~', '.mp3', $key->file_path) . '">';
+				$inner .= '</audio>';
+				$html .= wrap($inner);
 				break;
 
 			case 'video/mp4': // served by webm case
@@ -158,14 +169,14 @@ function render_page($key, $print = false) {
 				break;
 
 			default:
-				$html .= 'Unsupported content type: ' . $key->mime_type;
+				$html .= wrap('Unsupported content type: ' . $key->mime_type);
 				break;
 		}
-		if ($print) {
-			echo $html;
-		} else {
-			return $html;
-		}
+	}
+	if ($print === true) {
+		echo $html;
+	} elseif ($print === false) {
+		return $html;
 	}
 }
 
@@ -173,11 +184,8 @@ function render_pages($arr) {
 	foreach ($arr as $page) {
 		$html = '';
 		$html .= '<article>';
-		$html .= '<div class="container">';
-		$html .= '<div class="row">';
-		$html .= '<div class="twelve columns">';
 		$html .= render_page($page, false);
-		$html .= '</div></div></div></article>';
+		$html .= '</article>';
 		$html .= '<hr>';
 		echo $html;
 	}
@@ -197,11 +205,6 @@ function order($arr, $cmp = 'desc') {
 	return $arr;
 }
 
-// convenience for merging tags and pages
-function merge_content($arr1, $arr2) {
-	return array_merge($arr1, $arr2);
-}
-
 function get_tagged_content() {
 	$json = file_get_contents(GSPLUGINPATH .'/file_manager/uploads/metadata.json');
 	$data = json_decode($json);
@@ -214,4 +217,103 @@ function get_tagged_content() {
 	}
 
 	return $data;
+}
+
+function wrap($content) {
+	return <<< EOT
+	<div class="container">
+	<div class="row">
+	<div class="twelve columns">{$content}</div>
+	</div>
+	</div>
+EOT;
+}
+
+function content_shortcodes($content, $print = true) {
+
+	$html = '';
+
+	// get shortcodes for inner content
+
+	// [text]
+	preg_match_all(
+		'~<[^>]+>\s*\[text\]\s*</[^>]+>(.*)\[/text\]\s*</[^>]+>~s',
+		$content,
+		$match_text
+	);
+
+	// [gallery]
+	preg_match_all(
+		'~<[^>]+>\s*\[gallery\]\s*</[^>]+>(.*)\[/gallery\]\s*</[^>]+>~s',
+		$content,
+		$match_gallery
+	);
+
+	// parse gallery content
+	$gallery = array();
+	if (!empty($match_gallery[1])) {
+		$gallery = array_map(function(&$item) {
+			return preg_replace('~<([^>\s]+)\s*(?:[^>]+)?>(<img[^>]+>)</\1>~', '$2', $item);
+		}, $match_gallery[1]);
+	}
+
+
+	// concatenate parsed content
+	if (!empty($match_text[1])) {
+		$html .= wrap($match_text[1][0]);
+	};
+	if (!empty($gallery)) {
+		$gallery_str = '';
+		foreach ($gallery as $image) {
+			$gallery_str .= $image;
+		}
+		$html .= wrap($gallery_str);
+	}
+
+	if ($print === true) {
+		echo $html;
+	} elseif ($print === false) {
+		return $html;
+	}
+}
+
+function excerpt_shortcodes($content, $print = true) {
+
+	// [excerpt]
+	preg_match_all(
+		'~<[^>]+>\s*\[excerpt\]\s*</[^>]+>(.*)\[/excerpt\]\s*</[^>]+>~s',
+		$content,
+		$match_excerpt
+	);
+
+	if (!empty($match_excerpt[1])) {
+		if ($print === true) {
+			echo $match_excerpt[1][0];
+		} elseif ($print === false) {
+			return $match_excerpt[1][0];
+		}
+	}
+}
+
+function apply_filter($content, $filter, $print) {
+	return call_user_func($filter, $content, $print);
+}
+
+// convenience method to merge tags and pages
+function merge_content($arr1, $arr2) {
+	return array_merge($arr1, $arr2);
+}
+
+// convenience method to return page slug
+function get_slug() {
+	return get_page_slug(false);
+}
+
+function link_to($id) {
+	return get_site_url(false) . 'index.php?id=' . $id;
+}
+
+function link_to_query($query_str) {
+	$query_str = is_array($query_str) ? $query_str : array($query_str);
+	return link_to(implode('&', $query_str));
 }

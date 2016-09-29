@@ -3,7 +3,7 @@ body { opacity: 0; &.ready { opacity: 1; } }
 
 // main nav
 .nav__main {
-  margin-top: 30px;
+  margin-top: $measure;
   ul {
     list-style: none;
     li {
@@ -39,11 +39,26 @@ body { opacity: 0; &.ready { opacity: 1; } }
   }
 }
 
+.nav__filter{
+  a, a:link, a:visited, a:focus, a:active {
+    color: blue;
+    position: relative;
+    text-decoration: none;
+    &:before {
+      position: absolute;
+      top: -0.08em;
+      left: -1em;
+    }
+  }
+  &--add:before { content: '+'; }
+  &--remove:before { content: '-'; }
+}
+
 // article
 .article {
   &__header {
     margin: 0;
-    border-radius: 30px;
+    border-radius: $measure;
 
     position: absolute;
     z-index: 1;
@@ -78,12 +93,12 @@ body { opacity: 0; &.ready { opacity: 1; } }
   justify-content:center;
 }
 
-article .row { padding: 30px; }
+article .row { padding: $measure; }
 body.index,
-body.category { main { padding-top: 30px; } }
+body.category { main { padding-top: $measure; } }
 body.default article .container {
   .row { padding: 0; }
-  &:first-child { .row { padding-top: 30px; } }
-  &:last-child { .row { padding-bottom: 30px; } }
+  &:first-child { .row { padding-top: $measure; } }
+  &:last-child { .row { padding-bottom: $measure; } }
 }
 

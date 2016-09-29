@@ -48,7 +48,7 @@ gulp.task 'sass', () ->
 
 gulp.task 'watch', ['scripts', 'sass'], () ->
   gulp.watch 'src/coffee/*.coffee', ['scripts']
-  gulp.watch 'src/sass/*.scss', ['sass']
+  gulp.watch 'src/sass/**/*.scss', ['sass']
 
 guid = ->
   s4 = ->
