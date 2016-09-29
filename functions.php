@@ -5,9 +5,13 @@
 	Todo:
 	 - support pagination (infinite scroll)
 	 - merge fragments with pages for pagination
+	 - add secondary filter functionality
+	 - make things less case-sensitive
 
 	Feature ideas:
 	 - add grouping to display contents as a block without having to add them to a post
+	 - ajaxify?
+	 - port for flatfile re: query strings?
 
 */
 
@@ -23,12 +27,12 @@ function all_pages() {
 	return $pagesArray;
 }
 
-function filter_by_tags($arr, $tags, $all = false) {
+function filter_by_tags($arr, $tags, $match_all = false) {
 	$res = array();
 	if (gettype($tags) == 'string') {
 		$tags = array($tags);
 	}
-	if ($all) { // all tags must match
+	if ($match_all) { // all tags must match
 		foreach ($arr as $item) {
 			if (
 				property_exists($item, 'tags') &&
@@ -81,6 +85,10 @@ function get_pages($args = array()) {
 	$count = 0;
 
 	foreach ($args['pages'] as $key => $value) {
+
+		// omit collections pages
+		if ($value['template'] == 'category.php' || $value['template'] == 'homepage.php') continue;
+
 		$pages[$count] = (object) $value;
 
 		// add page data_type for parsing merged content later
@@ -90,8 +98,9 @@ function get_pages($args = array()) {
 		$pages[$count]->publish_date = strtotime($value['pubDate']);
 		$pages[$count]->content = get_page($key);
 		$pages[$count]->tags = explode(',', $value['meta']);
-		$pages[$count]->url = $value['url'] == 'index' ? '/' : get_site_url(false) . 'index.php?' . $value['url'];
+		$pages[$count]->url = $value['url'] == 'index' ? '/' : get_site_url(false) . 'index.php?id=' . $value['url'];
 		$count += 1;
+
 		if ($count == $args['limit']) break;
 	}
 

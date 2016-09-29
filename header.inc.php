@@ -7,19 +7,11 @@
 	<meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
 	<link href="<?php get_theme_url(); ?>/assets/stylesheets/<?php echo MS_THEME_REV; ?>.css" rel="stylesheet">
   <?php get_header(); ?>
-  <style type="text/css">
-    body {opacity: 1;}
-  </style>
 </head>
   <body class="<?php (get_page_slug() == 'index' ? 'index' : 'default'); ?>" >
 
   	<header class="container">
      <nav class="nav__main twelve columns">
-       <ul>
-         <?php foreach (menu_data() as $item): ?>
-          <li><a href="<?= $item['url']; ?>"><?= $item['title']; ?></a></li>
-         <?php endforeach ?>
-         <li><a href="/">Home</a></li>
-       </ul>
+       <ul><?php get_navigation(true); ?></ul>
      </nav>
     </header>
