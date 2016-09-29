@@ -10,7 +10,6 @@
 	Feature ideas:
 	 - add grouping to display contents as a block without having to add them to a post
 	 - ajaxify?
-	 - port for flatfile re: query strings?
 
 */
 
@@ -186,7 +185,6 @@ function render_pages($arr) {
 		$html .= '<article>';
 		$html .= render_page($page, false);
 		$html .= '</article>';
-		$html .= '<hr>';
 		echo $html;
 	}
 }
@@ -222,6 +220,7 @@ function get_tagged_content() {
 function wrap($content) {
 	return <<< EOT
 	<div class="container">
+	<!-- <h2 class="article__header"><a href="#">the post title</a></h2> -->
 	<div class="row">
 	<div class="twelve columns">{$content}</div>
 	</div>
@@ -315,5 +314,5 @@ function link_to($id) {
 
 function link_to_query($query_str) {
 	$query_str = is_array($query_str) ? $query_str : array($query_str);
-	return link_to(implode('&', $query_str));
+	return '?' . implode('&', $query_str);
 }

@@ -24,16 +24,21 @@
       clearTimeout timer
       timer = setTimeout (=> args.forEach (arg) => arg.call(@)), DEBOUNCE_SPEED
 
-    preload = ->
-      PRELOAD_IMAGES.forEach (url) ->
+    preload = (done) ->
+      PRELOAD_IMAGES.forEach (url, idx) ->
         img = new Image
+        img.addEventListener 'load',
+          () => done.call(@, url, idx),
+          false
         img.src = url
+
+    noop = ->
 
     $(window).on 'resize', () -> afterResize([resizeHomeButton])
 
     resizeType()
     resizeHomeButton()
-    preload()
+    preload(noop)
 
     $('body').addClass('ready')
 
