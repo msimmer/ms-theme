@@ -1,11 +1,26 @@
 
 $fontsize: 1.4rem;
+$measure: 24px;
+$fontstack: -apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
 
-img { max-width: 100%; }
-h1,h2,h3,h4,h5,h6,p,td,li { font-size: $fontsize; }
+body {
+  font-family: $fontstack;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+img, video { width: 100%; max-width: 100%; }
+h1,h2,h3,h4,h5,h6,p,td,li { font-size: $fontsize; font-weight: normal; }
 h1,h2,h3,h4,h5,h6,p,table { margin: 0 0 $fontsize; }
 ul,ol { margin-bottom: $fontsize; }
 li > ul, li > ol { margin-bottom: 0; }
 blockquote { font-size: $fontsize; margin: $fontsize 0 $fontsize $fontsize; }
 a, a:link, a:active, a:focus { color: blue; }
 a:visited { color: indigo; }
+
+article {
+  padding: 0;
+  margin: $measure 0;
+  body.default & { margin: 0; }
+}

@@ -1,5 +1,16 @@
 <?php if(!defined('IN_GS')){ die('you cannot load this page directly.'); }
 
+/*
+
+	Todo:
+	 - support pagination (infinite scroll)
+	 - merge fragments with pages for pagination
+
+	Feature ideas:
+	 - add grouping to display contents as a block without having to add them to a post
+
+*/
+
 if (!defined('MS_THEME_REV'))
 	define('MS_THEME_REV', json_decode(file_get_contents(dirname(__FILE__) . '/config.json'))[0]->rev);
 if (!defined('MS_THEME_VERSION'))
@@ -17,7 +28,7 @@ function filter_by_tags($arr, $tags, $all = false) {
 	if (gettype($tags) == 'string') {
 		$tags = array($tags);
 	}
-	if ($all) { // all tags match
+	if ($all) { // all tags must match
 		foreach ($arr as $item) {
 			if (
 				property_exists($item, 'tags') &&
@@ -79,6 +90,7 @@ function get_pages($args = array()) {
 		$pages[$count]->publish_date = strtotime($value['pubDate']);
 		$pages[$count]->content = get_page($key);
 		$pages[$count]->tags = explode(',', $value['meta']);
+		$pages[$count]->url = $value['url'] == 'index' ? '/' : get_site_url(false) . 'index.php?' . $value['url'];
 		$count += 1;
 		if ($count == $args['limit']) break;
 	}
@@ -86,34 +98,92 @@ function get_pages($args = array()) {
 	return $pages;
 }
 
-function render_page($key) {
+function render_page($key, $print = false) {
 	if ( // render page
 		property_exists($key, 'data_type') &&
 		$key->data_type == 'page'
 	) {
-		echo $key->content;
+		$html = '';
+		$html .= '<article>';
+		$html .= '<div class="container">';
+		$html .= '<div class="row">';
+		$html .= '<div class="twelve columns">';
+		$html .= $key->content;
+		$html .= '</div></div></div></article>';
+		echo $html;
 	} else { // is a file, figure out what kind and render it
-		echo '<img src="' . MS_FILE_MANAGER_URI . $key->file_path .'">';
+		$html = '';
+		switch ($key->mime_type) {
+			case 'image/jpeg':
+			case 'image/png':
+			case 'image/gif':
+				$html .= '<img alt="'. $key->name .'" src="' . MS_FILE_MANAGER_URI . $key->file_path .'">';
+				break;
+
+			case 'video/webm':
+	      $html = '';
+	      $html .= '<video controls preload="auto">';
+	      $html .= '<source src="'. MS_FILE_MANAGER_URI . $key->file_path .'" type="video/webm">';
+	      $html .= '<source src="'. MS_FILE_MANAGER_URI . preg_replace('~\.webm$~', '.mp4', $key->file_path) .'" type="video/mp4">';
+	      $html .= 'Your browser doesn\'t support HTML5 video tag.';
+	      $html .= '</video>';
+	     	break;
+
+			case 'audio/ogg':;
+				$html .= '<audio controls preload="auto">';
+				$html .= '<source src="' . MS_FILE_MANAGER_URI . $key->file_path . '">';
+				$html .= '<source src="' . MS_FILE_MANAGER_URI . preg_replace('~\.ogg$~', '.mp3', $key->file_path) . '">';
+				$html .= '</audio>';
+				break;
+
+			case 'video/mp4': // served by webm case
+			case 'audio/mpeg3': // served by ogg case
+			case 'audio/x-mpeg-3':
+				break;
+
+			// TODO
+			case 'application/pdf':
+				break;
+
+			case 'text/plain':
+				break;
+
+			default:
+				$html .= 'Unsupported content type: ' . $key->mime_type;
+				break;
+		}
+		if ($print) {
+			echo $html;
+		} else {
+			return $html;
+		}
 	}
 }
 
 function render_pages($arr) {
 	foreach ($arr as $page) {
-		echo '<div class="container">';
-		render_page($page);
-		echo '</div>';
+		$html = '';
+		$html .= '<article>';
+		$html .= '<div class="container">';
+		$html .= '<div class="row">';
+		$html .= '<div class="twelve columns">';
+		$html .= render_page($page, false);
+		$html .= '</div></div></div></article>';
+		$html .= '<hr>';
+		echo $html;
 	}
 }
 
+function desc($a, $b) {
+	if ($a->publish_date == $b->publish_date) return 0;
+	return ($a->publish_date < $b->publish_date) ? -1 : 1;
+}
+function asc($a, $b) {
+	if ($a->publish_date == $b->publish_date) return 0;
+	return ($a->publish_date > $b->publish_date) ? -1 : 1;
+}
+
 function order($arr, $cmp = 'desc') {
-	function desc($a, $b) {
-		if ($a->publish_date == $b->publish_date) return 0;
-		return ($a->publish_date < $b->publish_date) ? -1 : 1;
-	}
-	function asc($a, $b) {
-		if ($a->publish_date == $b->publish_date) return 0;
-		return ($a->publish_date > $b->publish_date) ? 1 : -1;
-	}
 	usort($arr, $cmp);
 	return $arr;
 }

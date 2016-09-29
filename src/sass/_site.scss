@@ -1,0 +1,89 @@
+
+body { opacity: 0; &.ready { opacity: 1; } }
+
+// main nav
+.nav__main {
+  margin-top: 30px;
+  ul {
+    list-style: none;
+    li {
+      display: inline-block;
+      &:first-child a { padding-left: 0; }
+      &:last-child { // home link
+        a {
+          font-size: 0!important;
+          height: 70px;
+          width: 70px;
+          margin: 0;
+          padding: 0;
+          position: absolute;
+          top: 41px;
+          right: -5px;
+          background: blue url('/theme/MS_Custom/images/home1.svg') no-repeat center center;
+          border-radius: 50%;
+          background-size: 60%;
+        }
+      }
+      a {
+        padding: $measure/2;
+        display: block;
+        height: 100%;
+        width: 100%;
+        text-decoration: none;
+        &:hover,
+        &:focus,
+        &:visited,
+        &:active { color: blue; }
+      }
+    }
+  }
+}
+
+// article
+.article {
+  &__header {
+    margin: 0;
+    border-radius: 30px;
+
+    position: absolute;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    align-items:center;
+    justify-content:center;
+    mix-blend-mode: multiply;
+    background-color: #f0f0f0;
+    transition:background-color 0.15s ease-in;
+    a{ transition: color 0.15s ease-in; }
+    a, a:link, a:visited, a:focus, a:active {
+      text-decoration: none;
+      color: blue;
+    }
+    &:hover{
+      background-color: blue;
+      a, a:link, a:visited, a:focus, a:active {
+        color: white;
+      }
+    }
+  }
+}
+
+.row__centered {
+  display: flex;
+  flex-direction:row;
+  align-items:center;
+  justify-content:center;
+}
+
+article .row { padding: 30px; }
+body.index,
+body.category { main { padding-top: 30px; } }
+body.default article .container {
+  .row { padding: 0; }
+  &:first-child { .row { padding-top: 30px; } }
+  &:last-child { .row { padding-bottom: 30px; } }
+}
+

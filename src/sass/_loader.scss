@@ -1,0 +1,53 @@
+
+.loader__container{
+  height: 0;
+  width: 100%;
+  background: transparent url('/site/themes/mark/src/img/bg4.jpg') no-repeat center center;
+  position: relative;
+  background-size: cover;
+  .loader__element {
+
+    mix-blend-mode: color-dodge;
+
+
+    top: 15px;
+    margin: 60px auto;
+    font-size: 10px;
+    position: relative;
+    text-indent: -9999em;
+    border-top: 2px solid beige;
+    border-right: 2px solid beige;
+    border-bottom: 2px solid beige;
+    border-left: 2px solid transparent;
+    transform: translateZ(0);
+    animation: load8 1.1s infinite linear;
+    position: absolute;
+    left: calc(50% - 25px);
+  }
+  .loader__element,
+  .loader__element:after {
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+  }
+  @-webkit-keyframes load8 {
+    0% {
+      -webkit-transform: rotate(0deg);
+      transform: rotate(0deg);
+    }
+    100% {
+      -webkit-transform: rotate(360deg);
+      transform: rotate(360deg);
+    }
+  }
+  @keyframes load8 {
+    0% {
+      -webkit-transform: rotate(0deg);
+      transform: rotate(0deg);
+    }
+    100% {
+      -webkit-transform: rotate(360deg);
+      transform: rotate(360deg);
+    }
+  }
+}

@@ -1,5 +1,6 @@
 
 coffee = require 'gulp-coffee'
+uglify = require 'gulp-uglify'
 concat = require 'gulp-concat'
 sass = require 'gulp-sass'
 gutil = require 'gulp-util'
@@ -24,20 +25,29 @@ gulp.task 'clean', () ->
     './assets/stylesheets/*.css'
   ])
 
-gulp.task 'coffee', ['clean'], () ->
-  gulp.src('src/coffee/*.coffee')
-    .pipe(coffee({bare:true}).on('error', gutil.log))
+gulp.task 'scripts', ['coffee'], () ->
+  gulp.src([
+    'node_modules/jquery/dist/jquery.min.js'
+    'vendor/javascripts/**/*.js'
+    '.tmp/application.js'
+    ])
     .pipe(concat(rev + '.js'))
+    .pipe(uglify())
     .pipe(gulp.dest('assets/javascripts'))
 
-gulp.task 'sass', ['clean'], () ->
-  gulp.src('src/sass/main.scss')
+gulp.task 'coffee', () ->
+  gulp.src('src/coffee/*.coffee')
+    .pipe(coffee({bare:true}).on('error', gutil.log))
+    .pipe(gulp.dest('.tmp'))
+
+gulp.task 'sass', () ->
+  gulp.src('src/sass/application.scss')
     .pipe(sass({outputStyle: 'nested'}).on('error', gutil.log))
     .pipe(rename(rev + '.css'))
     .pipe(gulp.dest('assets/stylesheets'))
 
-gulp.task 'watch', ['clean', 'coffee', 'sass'], () ->
-  gulp.watch 'src/coffee/*.coffee', ['coffee']
+gulp.task 'watch', ['scripts', 'sass'], () ->
+  gulp.watch 'src/coffee/*.coffee', ['scripts']
   gulp.watch 'src/sass/*.scss', ['sass']
 
 guid = ->
