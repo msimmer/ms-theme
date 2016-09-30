@@ -93,7 +93,7 @@ body { opacity: 0; &.ready { opacity: 1; } }
   justify-content:center;
 }
 
-article .row { padding: $measure; }
+article .row { padding: $measure; border-radius: $measure; background-color: #f0f0f0; }
 body.index,
 body.category { main { padding-top: $measure; } }
 body.default article .container {
@@ -102,3 +102,6 @@ body.default article .container {
   &:last-child { .row { padding-bottom: $measure; } }
 }
 
+img { display: block; margin: 0 auto; }
+img.width { width: 100%; height: auto; max-width: 100%; max-height: auto; }
+img.tall { width: auto; height: 100vh; max-width: auto; max-height: 100vh; }

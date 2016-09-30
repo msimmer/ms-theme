@@ -132,7 +132,8 @@ function render_page($key, $print = false) {
 			case 'image/jpeg':
 			case 'image/png':
 			case 'image/gif':
-				$inner = wrap('<img alt="'. $key->name .'" src="' . MS_FILE_MANAGER_URI . $key->file_path .'">');
+				$klass = property_exists($key, 'dimensions') && $key->dimensions->width > $key->dimensions->height ? 'wide' : 'tall';
+				$inner = wrap('<img class="'. $klass .'" alt="'. $key->name .'" src="' . MS_FILE_MANAGER_URI . $key->file_path .'">');
 				$html .= $inner;
 				break;
 
@@ -252,7 +253,9 @@ function content_shortcodes($content, $print = true) {
 	$gallery = array();
 	if (!empty($match_gallery[1])) {
 		$gallery = array_map(function(&$item) {
-			return preg_replace('~<([^>\s]+)\s*(?:[^>]+)?>(<img[^>]+>)</\1>~', '$2', $item);
+			$item = preg_replace('~<([^>\s]+)\s*(?:[^>]+)?>(<img[^>]+>)</\1>~', '$2', $item);
+			$item = preg_replace('~(?:\s?style=([\'"])[^\'"]+\1)~', '', $item);
+			return $item;
 		}, $match_gallery[1]);
 	}
 
@@ -286,10 +289,19 @@ function excerpt_shortcodes($content, $print = true) {
 	);
 
 	if (!empty($match_excerpt[1])) {
+		$excerpt = $match_excerpt[1][0];
+		$excerpt = preg_replace('~<([^>\s]+)\s*(?:[^>]+)?>(<img[^>]+>)</\1>~', '$2', $excerpt);
+		$excerpt = preg_replace_callback('~(<img.+)style="width: (\d+)px; height: (\d+)px;([^>]*>)~', function($matches) {
+		  $width = $matches[2];
+		  $height = $matches[3];
+		  $klass = $width > $height ? 'wide' : 'tall';
+		  return $matches[1] . 'class="'. $klass .'"' . $matches[4];
+		}, $excerpt);
+
 		if ($print === true) {
-			echo $match_excerpt[1][0];
+			echo $excerpt;
 		} elseif ($print === false) {
-			return $match_excerpt[1][0];
+			return $excerpt;
 		}
 	}
 }
